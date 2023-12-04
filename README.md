@@ -1,2 +1,2 @@
-# DMIS-domaci-2
-Drugi domaci iz distribuiranih mreza i sistema
+# DMIS-homework-2
+Second homework for Distributed Networks and Systems
