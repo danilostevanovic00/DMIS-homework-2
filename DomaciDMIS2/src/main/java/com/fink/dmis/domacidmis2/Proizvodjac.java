@@ -4,8 +4,6 @@
  */
 package com.fink.dmis.domacidmis2;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author danil

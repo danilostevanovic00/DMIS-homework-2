@@ -9,13 +9,21 @@ package com.fink.dmis.domacidmis2;
  * @author danil
  */
 public class Izvestac extends Thread{
-    private static int ID = -1;
+    private static int ID = 0;
     private int izvestacId = ++ID;
     private Skladiste skladiste;
+    private boolean radi = false;
     
     public Izvestac(Skladiste skladiste){
         this.skladiste = skladiste;
         this.setPriority(Thread.MAX_PRIORITY);
+    }
+    
+    public synchronized void setRadi(boolean radi) {
+        this.radi = radi;
+        if (radi) {
+            notify(); // Notify this thread to wake up
+        }
     }
 
     @Override
@@ -37,17 +45,21 @@ public class Izvestac extends Thread{
                 To dovodi do toga da je izlaz mnogo pregledniji i da imamo kombinaciju praznog i popunjenog skladista.
                 (Zakljucak donet nakon pokretanja programa vise od 50 puta u razlicitim konfiguracijama)
                 */
-                int trajanje = 500;
-                Thread.sleep(trajanje);
-                skladiste.IzvestajSkladista(izvestacId);
                 
+                synchronized (this) {
+                    while (!radi) {
+                        wait(); // Wait until radi is set to true and this thread is notified
+                    }
+                }
+                //int trajanje = 500;
+                //Thread.sleep(trajanje);
+                skladiste.IzvestajSkladista(izvestacId);
+                synchronized (this) {
+                    radi = false;
+                }
             }
         } catch (InterruptedException ex) {
             System.out.println("Izvestac "+izvestacId+ " je zavrsio sa radom");
         }
-    }
-    
-    
-    
-    
+    } 
 }
